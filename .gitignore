@@ -1,0 +1,15 @@
+*.py[cod]
+
+*/migrations/
+*/__pycache__/
+
+*/venv/
+*/app.db
+*/dist
+*/videos
+*/node_modules
+*/__pycache/
+*/package-lock.json
+*/images
+
+Script/Logs/
