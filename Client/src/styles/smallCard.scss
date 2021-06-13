@@ -1,0 +1,66 @@
+.small-card-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto;
+  width: 90%;
+
+  .small-card {
+    width: 13rem;
+    height: 26rem;
+
+    .card-header {
+      height: 4rem;
+    }
+
+    .card-wrapper {
+      position: relative;
+
+      .card-rarity {
+        background: #fff;
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        z-index: 1;
+      }
+
+      .numOwned {
+        background: #fff;
+        position: absolute;
+        padding: 0.2rem;
+        bottom: 0.5rem;
+        right: 1.5rem;
+      }
+
+      .add-card-owned {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 5rem;
+        margin: auto;
+      }
+
+      .remove-card-owned {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 5rem;
+        margin: auto;
+      }
+    }
+
+    .card-wrapper.opac {
+      opacity: 0.5;
+    }
+
+    .cardCode {
+      display: inline-block;
+      float: left;
+    }
+
+    .cardPrice {
+      display: inline-block;
+      float: right;
+    }
+  }
+}

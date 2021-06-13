@@ -21,7 +21,11 @@ class Card(db.Model):
         self.name = name
         self.type = type
         self.desc = desc
+        self.atk = atk
+        self.defense = defense
+        self.level = level
         self.race = race
+        self.attribute = attribute
         self.archetype_id = archetype_id
         self.image = image
         self.image_small = image_small

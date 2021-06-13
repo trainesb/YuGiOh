@@ -29,7 +29,7 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"]
       },{
         test: /\.(png|jpe?g|gif)$/,
-        loader: 'url-loader?limit=9000000&name=images/[name].[ext]',
+        loader: 'url-loader?limit=9000000&name=images/*/[name].[ext]',
       }
     ]
   },

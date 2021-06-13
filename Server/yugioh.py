@@ -7,10 +7,21 @@ from app.models.Card import Card
 from app.models.Rarity import Rarity
 from app.models.CardSet import CardSet
 from app.models.Archetype import Archetype
+from app.models.SetCategory import SetCategory
 from app.models.CardToSetMap import CardToSetMap
 
 app = create_app()
 
+
+@app.cli.command('init_set_category')
+def init_set_category():
+    print('Init Set Category')
+    categories = ['Booster Pack', 'Special Edition Boxes', 'Starter Decks', 'Structure Decks', 'Tins', 'Spped Duel', 'Duelist Packs', 'Duel Terminal Cards', 'Others']
+    for cat in categories:
+        c = SetCategory(cat)
+        db.session.add(c)
+    db.session.commit()
+    print('Done!')
 
 @app.cli.command('init_archetypes')
 def init_archetypes():
@@ -116,6 +127,11 @@ def get_card_sets():
     print('\nDone!')
 
 
+@app.cli.command('del_all_cards')
+def del_all_cards():
+    Card.query.delete()
+    db.session.commit()
+
 @app.cli.command('init_cards')
 def init_cards():
     print('Initializing Cards Table...', end='')
@@ -131,6 +147,7 @@ def init_cards():
         attribute = None
         image = None
         image_small = None
+
         if 'archetype' in dt:
             archetype_id = Archetype.query.filter_by(archetype_name=dt['archetype']).first()
             if archetype_id is not None: archetype_id = archetype_id.id
@@ -142,28 +159,31 @@ def init_cards():
         if 'card_images' in dt:
             card_images = dt['card_images'][0]
             if 'image_url' in card_images:
-                image = os.path.join(img_folder, 'cards', card_images['image_url'].split('/')[-1])
-                r = requests.get(card_images['image_url'], stream=True)
-                if r.status_code == 200:
-                    r.raw.decode_content = True
-                    with open(image, 'wb') as f:
-                        shutil.copyfileobj(r.raw, f)
-                    print('Image successfully downloaded: ', image)
-                else:
-                    print('Image couldn\'t be retrived')
+                image = os.path.join('cards', card_images['image_url'].split('/')[-1])
+                # r = requests.get(card_images['image_url'], stream=True)
+                # if r.status_code == 200:
+                #     r.raw.decode_content = True
+                #     with open(image, 'wb') as f:
+                #         shutil.copyfileobj(r.raw, f)
+                #     print('Image successfully downloaded: ', image)
+                # else:
+                #     print('Image couldn\'t be retrived')
             if 'image_url_small' in card_images:
-                image_small = os.path.join(img_folder, 'cards_small', card_images['image_url_small'].split('/')[-1])
-                r = requests.get(card_images['image_url_small'], stream=True)
-                if r.status_code == 200:
-                    r.raw.decode_content = True
-                    with open(image_small, 'wb') as f:
-                        shutil.copyfileobj(r.raw, f)
-                    print('Image successfully downloaded: ', image_small)
-                else:
-                    print('Image couldn\'t be retrived')
-
+                image_small = os.path.join('cards_small', card_images['image_url_small'].split('/')[-1])
+                # r = requests.get(card_images['image_url_small'], stream=True)
+                # if r.status_code == 200:
+                #     r.raw.decode_content = True
+                #     with open(image_small, 'wb') as f:
+                #         shutil.copyfileobj(r.raw, f)
+                #     print('Image successfully downloaded: ', image_small)
+                # else:
+                #     print('Image couldn\'t be retrived')
 
         card = Card(dt['name'], dt['type'], dt['desc'], atk, defense, level, dt['race'], attribute, archetype_id, image, image_small)
+
+        if 'atk' in dt:
+            print(atk)
+            print(card)
         db.session.add(card)
     db.session.commit()
     print('Done!')
@@ -176,6 +196,10 @@ def get_cards():
     else: print('Card Table Is Empty!')
     print('\nDone!')
 
+@app.cli.command('del_all_card_map')
+def del_card_set_map():
+    CardToSetMap.query.delete()
+    db.session.commit()
 
 @app.cli.command('init_card_to_set_map')
 def init_card_to_set_map():
@@ -209,6 +233,7 @@ def get_card_to_set_map():
 def fix_card_images():
     print('Fixing Card Images')
     cards = Card.query.all()
+    img_folder = os.path.abspath(os.path.join(os.getcwd(), '..', 'Client', 'src', 'images'))
     if cards:
         for card in cards:
             card.image = os.path.join('images', 'cards', card.image.split("\\")[-1])

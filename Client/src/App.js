@@ -5,6 +5,9 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 
+import Header from './components/partials/Header'
+import Nav from './components/partials/Nav'
+
 
 export const AuthContext = React.createContext()
 const initialState = { page: 'home' }
@@ -28,6 +31,7 @@ const App = () => {
 
   return (
     <AuthContext.Provider value={{state, dispatch}}>
+      <Header />
       <Container fluid>
         <Row>
           <Col sm={2} className='p-2 m-0' style={{ backgroundColor: '#165A97', marginTop: '2rem', alignItems: 'center' }}>
