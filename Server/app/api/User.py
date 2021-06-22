@@ -11,6 +11,15 @@ from app.models.CardToSetMap import CardToSetMap
 from app.models.CardSet import CardSet
 from flask_login import current_user, login_user, logout_user, login_required
 
+# Get all users
+@bp.route('/api/users', methods=['GET'])
+def get_all_users():
+    users = User.query.all()
+    rtrn = []
+    if users:
+        for user in users: rtrn.append(user._toDict())
+    return{'users': rtrn}
+
 # Get the current user
 @bp.route('/api/user/current', methods=['GET'])
 def get_current_user():
@@ -124,7 +133,8 @@ def check_user_loggedin():
 def user_login():
     data = request.get_json()
     user = User.query.filter_by(username=data.get('username')).first()
-    if user is None or not user.check_password(data.get('password')): return {'status': False}
+    if user is None: return {'status': False, 'error': 'User, `' + data.get('username') + '` does not exist!'}
+    if not user.check_password(data.get('password')): return {'status': False, 'error': 'Incorrect password!'}
 
     user.last_active = datetime.now()
     db.session.add(user)

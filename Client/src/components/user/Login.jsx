@@ -42,6 +42,7 @@ export const Login = () => {
           dispatch({type: "LOGIN", payload: dt})
         } else {
           setData({...data, isSubmitting: false, errorMessage: dt.error})
+          alert('Login Failed: ' + dt.error)
         }
       })
   }
