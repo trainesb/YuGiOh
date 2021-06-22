@@ -14,7 +14,7 @@ import Header from './components/partials/Header'
 import Footer from './components/partials/Footer'
 import Nav from './components/partials/Nav'
 import Login from './components/user/Login'
-
+import Register from './components/user/register/Register'
 
 export const AuthContext = React.createContext()
 const initialState = {
@@ -81,7 +81,7 @@ const App = () => {
         {!state.isAuthenticated &&
           <Row>
             <Col sm={12} className="justify-content-around" style={{ backgroundColor: '#165A97', display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '0.5em 0.5em 0.5em 0' }}>
-              <Login />
+              {state.page === 'login' ? <Login /> : <Register />}
             </Col>
           </Row>
         }

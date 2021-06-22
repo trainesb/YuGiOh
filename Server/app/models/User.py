@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
 
     invited = db.Column(db.DateTime)
+    invited_code = db.Column(db.String(10))
     created = db.Column(db.DateTime)
     last_updated = db.Column(db.DateTime)
     last_active = db.Column(db.DateTime)

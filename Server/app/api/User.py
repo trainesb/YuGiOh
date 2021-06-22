@@ -1,14 +1,17 @@
 import os
 import shutil
+import random
+import string
 from app import db
 from app.api import bp
 from secrets import token_hex
 from app.models.User import User
 from flask_mail import Mail, Message
+from app.models.CardSet import CardSet
+from app.utils.email import send_email
 from flask import request, current_app
 from datetime import datetime, timedelta
 from app.models.CardToSetMap import CardToSetMap
-from app.models.CardSet import CardSet
 from flask_login import current_user, login_user, logout_user, login_required
 
 # Get all users
@@ -70,22 +73,50 @@ def get_time():
 # Create a new user
 @bp.route('/api/user', methods=['POST'])
 def create_user():
-    data = request.get_json()
-    user = User()
-    user.username = data.get('username')
-    user.set_password(data.get('password'))
-    user.email = data.get('email')
-    user.phone = data.get('phone')
-    user.phone_provider = data.get('phone_provider')
-    user.created = datetime.now()
-    db.session.add(user)
+    try:
+        data = request.get_json()
+        user = User.query.filter_by(username=data.get('username')).first()
+        if user: return {'status': False, 'error': 'Username, `' + data.get('username') + '` has already been used!'}
+        user = User()
+        user.username = data.get('username')
+        user.set_password(data.get('password'))
+        user.email = data.get('email')
+        user.phone = data.get('phone')
+        user.phone_provider = data.get('phone_provider')
+        user.invited = datetime.now()
+        user.invited_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
+        db.session.add(user)
+        db.session.commit()
+        return {'status': True}
+    except Exception as err:
+        print('Create User Error: ', err)
+        return {'status': False, 'error': err}
+
+# Send verification code to user
+@bp.route('/api/register/verification/<string:method>/<string:username>', methods=['GET'])
+def send_verification_code(method, username):
+    user = User.query.filter_by(username=username).one()
+    if not user: return {'status': False}
+    if method == 'phone':
+        print('Send Verification to phone')
+        send_email('Verification Code', str(user.phone)+str(user.phone_provider), html=None, body='Verification Code: ' + user.invited_code)
+    else:
+        print('Send Verfication to email')
+        send_email('Verification Code', user.email, html=None, body='Verification Code: ' + user.invited_code)
+
+    return {'status': True}
+
+# Check registration verification code
+@bp.route('/api/register/code/<string:code>/<string:username>', methods=['GET'])
+def check_verification_code(code, username):
+    user = User.query.filter_by(username=username).first()
+    if user is None: return {'status': False, 'error': 'User does not exist!'}
+    if user.invited_code != code: return {'status': False, 'error': 'Incorrect Verification Code: ' + code}
 
     # Create folder for user
-    user = User.query.filter_by(username=data.get('username')).first()
     dir = 'user_' + str(user.id)
     os.mkdir(os.path.join(os.getcwd(), 'users_card_data', dir))
     user.card_folder = dir
-    db.session.add(user)
 
     # Cetae and init file for user card data
     card_sets = CardSet.query.all()
@@ -99,6 +130,8 @@ def create_user():
             f.write(str(card.id) + ':' + str(0) + ',')
         f.close()
 
+    user.created = datetime.now()
+    db.session.add(user)
     db.session.commit()
     return {'status': True}
 
