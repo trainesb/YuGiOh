@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import User from './User.jsx'
-import Loading from '../partials/Loading.jsx'
+import Card from 'react-bootstrap/Card'
+
+import Loading from '../partials/Loading'
 
 const Users = () => {
   const [users, setUsers] = useState([])
@@ -17,7 +18,15 @@ const Users = () => {
     <div style={{backgroundColor: '#C5D7E8', width: '100%', height: '100%', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
       {loading
         ? <Loading />
-        : users.map((user) => <User key={user.id} id={user.id} username={user.username} role={user.role} email={user.email} phone={user.phone} phoneProvider={user.phone_provider} /> )
+        : users.map((user) => (
+          <a href={'/user/' + user.id}>
+            <Card>
+              <Card.Body>
+                <h2>{user.username}</h2>
+              </Card.Body>
+            </Card>
+          </a>
+        ))
       }
     </div>
   )

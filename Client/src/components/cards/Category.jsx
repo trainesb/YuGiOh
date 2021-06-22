@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import Card from 'react-bootstrap/Card'
 
-import '../styles/category.scss'
+import '../../styles/category.scss'
 
 const Category = (props) => {
   const [categoryId] = useState(props.categoryId)
