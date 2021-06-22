@@ -6,8 +6,6 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import Register from './Register'
-
 export const Login = () => {
   const { dispatch } = useContext(AuthContext)
   const [data, setData] = useState({
@@ -16,7 +14,6 @@ export const Login = () => {
     isSubmitting: "",
     errorMessage: "",
   })
-  const [showRegister, setShowRegister] = useState(false)
   const [userId, setUserId] = useState(null)
 
   const handleInputChange = (event) => {
@@ -45,6 +42,10 @@ export const Login = () => {
           alert('Login Failed: ' + dt.error)
         }
       })
+  }
+
+  const handleRegister = (event) => {
+    dispatch({type: "SET_PAGE", payload: 'register'})
   }
 
   return(
@@ -84,14 +85,13 @@ export const Login = () => {
 
             <Row>
               <Col sm={12} className="text-center">
-                <p style={{cursor: 'pointer'}} onClick={() => setShowRegister(!showRegister)}>Register</p>
+                <p style={{cursor: 'pointer'}} onClick={handleRegister}>Register</p>
               </Col>
             </Row>
           </Container>
         </form>
       </Card.Body>
 
-      <Register show={showRegister} onHide={() => setShowRegister(false)} />
     </Card>
   )
 }
