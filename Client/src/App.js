@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { useRoutes } from 'hookrouter'
 import Routes from './Routes'
 
+import userIcon from '../public/images/icons/user.png'
+import './styles/profileIcon.scss'
+
+
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
 import Header from './components/partials/Header'
+import Footer from './components/partials/Footer'
 import Nav from './components/partials/Nav'
 import Login from './components/user/Login'
 
@@ -82,6 +87,7 @@ const App = () => {
         }
         {state.isAuthenticated &&
           <Row>
+            <a href='/profile' className="profile-icon"><img src={userIcon} /></a>
             <Col sm={2} className='p-2 m-0' style={{ backgroundColor: '#165A97', marginTop: '2rem', alignItems: 'center' }}>
               <Nav />
             </Col>
@@ -92,6 +98,7 @@ const App = () => {
         }
       </Container>
 
+      <Footer />
     </AuthContext.Provider>
   )
 }
