@@ -9,7 +9,6 @@ class CardToSetMap(db.Model):
     rarity_id = db.Column(db.Integer, index=True)
     card_code = db.Column(db.String(50))
     card_price = db.Column(db.Float)
-    num_owned = db.Column(db.Integer)
 
     def __init__(self, card_id, card_set_id, rarity_id, card_code, card_price):
         self.card_id = card_id
@@ -17,10 +16,9 @@ class CardToSetMap(db.Model):
         self.rarity_id = rarity_id
         self.card_code = card_code
         self.card_price = card_price
-        self.num_owned = 0
 
     def __repr__(self):
-        return '<Card_To_Set_Map id:{} card-id:{} card-set-id:{} rarity-id:{} card-code:{} card-price:{} Number-Owned:{}>'.format(self.id, self.card_id, self.card_set_id, self.rarity_id, self.card_code, self.card_price, self.num_owned)
+        return '<Card_To_Set_Map id:{} card-id:{} card-set-id:{} rarity-id:{} card-code:{} card-price:{}>'.format(self.id, self.card_id, self.card_set_id, self.rarity_id, self.card_code, self.card_price)
 
     def _toDict(self):
         return {
@@ -29,6 +27,5 @@ class CardToSetMap(db.Model):
             'card_set_id': self.card_set_id,
             'rarity_id': self.rarity_id,
             'card_code': self.card_code,
-            'card_price': self.card_price,
-            'num_owned': self.num_owned
+            'card_price': self.card_price
         }

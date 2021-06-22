@@ -16,6 +16,16 @@ const Nav = () => {
       })
   }, [])
 
+  function handleLogout(event) {
+    event.preventDefault()
+
+    fetch('/api/user/logout')
+      .then(() => {
+        sessionStorage.removeItem('User')
+      })
+      .then(() => window.location.assign('/'))
+  }
+
   return(
     <Accordion className="nav-wrapper">
       {categories !== null &&
@@ -29,6 +39,18 @@ const Nav = () => {
           ))}
         </>
       }
+
+      <Card>
+        <Accordion.Toggle as={Card.Header} className="p-0" variant="link" eventKey={'logout'}>
+          <a className="btn-nav" onClick={handleLogout}>Logout</a>
+        </Accordion.Toggle>
+      </Card>
+
+      <Card>
+          <Accordion.Toggle as={Card.Header} className="p-0" variant="link" eventKey={'profile'}>
+            <a href="/profile" className='btn-nav'>Profile</a>
+          </Accordion.Toggle>
+        </Card>
     </Accordion>
   )
 }

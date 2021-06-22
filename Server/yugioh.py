@@ -2,16 +2,34 @@ import os
 import click
 import shutil
 import requests
+from flask import session
 from app import create_app, db
+from app.models.User import User
 from app.models.Card import Card
+from flask_login import current_user
 from app.models.Rarity import Rarity
 from app.models.CardSet import CardSet
+from datetime import datetime, timedelta
 from app.models.Archetype import Archetype
 from app.models.SetCategory import SetCategory
 from app.models.CardToSetMap import CardToSetMap
 
 app = create_app()
 
+@app.before_request
+def update_last_active():
+    session.permanent = False
+    if current_user.is_authenticated:
+        current_user.last_active = datetime.now()
+        db.session.add(current_user)
+        db.session.commit()
+
+@app.cli.command('del_users')
+def del_users():
+    print('Delete All Users')
+    User.query.delete()
+    db.session.commit()
+    print('Done!')
 
 @app.cli.command('init_set_category')
 def init_set_category():
