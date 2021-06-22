@@ -1,14 +1,14 @@
 import React from 'react'
 
-import Cards from './components/Cards'
+import Cards from './components/cards/Cards'
 import Users from './components/user/Users'
-import Category from './components/Category'
+import Category from './components/cards/Category'
 
 import About from './components/about/About'
 import Profile from './components/user/Profile'
-import SingleCard from './components/SingleCard'
+import SingleCard from './components/cards/SingleCard'
 import Contact from './components/contact/Contact'
-import SetCategories from './components/SetCategories'
+import SetCategories from './components/cards/SetCategories'
 
 const Routes = {
   '/': () => <SetCategories />,

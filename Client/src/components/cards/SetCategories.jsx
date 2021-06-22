@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Card from 'react-bootstrap/Card'
 
-import '../styles/categories.scss'
+import '../../styles/categories.scss'
 
 const SetCategory = () => {
   const [categories, setCategories] = useState(null)

@@ -99,7 +99,8 @@ def send_verification_code(method, username):
     if not user: return {'status': False}
     if method == 'phone':
         print('Send Verification to phone')
-        send_email('Verification Code', str(user.phone)+str(user.phone_provider), html=None, body='Verification Code: ' + user.invited_code)
+        msg = 'Verification Code: ' + user.invited_code
+        send_email('Verification Code', str(user.phone)+str(user.phone_provider), html=None, body=msg)
     else:
         print('Send Verfication to email')
         send_email('Verification Code', user.email, html=None, body='Verification Code: ' + user.invited_code)
