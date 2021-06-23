@@ -244,7 +244,11 @@ def getCardsToSetMap(id):
 def getSetMapById(id):
     map = CardToSetMap.query.filter_by(id=id).first()
     if not map: return {'map': None}
-    return {'map': map._toDict()}
+
+    set = CardSet.query.filter_by(id=map.card_set_id).first()
+    map = map._toDict()
+    map['set'] = set._toDict()
+    return {'map': map}
 
 
 # Get Card by id

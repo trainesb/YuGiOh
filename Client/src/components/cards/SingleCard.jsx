@@ -8,6 +8,7 @@ import '../../styles/singleCard.scss'
 
 const SingleCard = (props) => {
   const [cardSetMap, setCardSetMap] = useState(null)
+  const [numOwned, setNumOwned] = useState(0)
   const [card, setCard] = useState(null)
   const [cardSet, setCardSet] = useState(null)
   const [archetype, setArchetype] = useState(null)
@@ -34,6 +35,10 @@ const SingleCard = (props) => {
         fetch('/api/rarity/' + props.rarityId)
           .then(response => response.json())
           .then(data => setRarity(data.rarity))
+
+        fetch('/api/card/numOwned/' + data.map.card_set_id  + '/' + data.map.id)
+          .then(response => response.json())
+          .then(data => setNumOwned(data.num_owned))
       })
   }, [])
 
@@ -42,7 +47,7 @@ const SingleCard = (props) => {
 
     fetch('/api/addOwnedCard/' + cardSetMap.id)
       .then(response => response.json())
-      .then(data => setCardSetMap(prevState => ({...prevState, ["num_owned"]: data.num_owned}) ))
+      .then(data => setNumOwned(data.num_owned) )
   }
 
   const handleRemoveOwned = (event) => {
@@ -50,7 +55,7 @@ const SingleCard = (props) => {
 
     fetch('/api/removeOwnedCard/' + cardSetMap.id)
       .then(response => response.json())
-      .then(data => setCardSetMap(prevState => ({...prevState, ["num_owned"]: data.num_owned}) ))
+      .then(data => setNumOwned(data.num_owned) )
   }
 
   return (
@@ -58,8 +63,7 @@ const SingleCard = (props) => {
       {card !== null &&
         <Card>
           <Card.Header>
-            <a className="back-btn" href={'/set/' + cardSetMap.card_set_id}>Back</a>
-            <Card.Title>{card.name}</Card.Title>
+            <Card.Title className="text-center"><h2 className="text-center"><strong>{cardSetMap.set.set_name}</strong></h2></Card.Title>
           </Card.Header>
           <Card.Body>
 
@@ -67,32 +71,44 @@ const SingleCard = (props) => {
               <p><img src={'../../' + card.image} /></p>
             </div>
 
+
             <div>
-              {rarity !== null && <p>{rarity.rarity} - {rarity.rarity_code}</p>}
-              <p>Type: {card.type}</p>
+              <div className="card-title">
+                <h3 className="text-center"><strong>{card.name}</strong></h3>
+                <hr />
+              </div>
+
+              <div className="info">
+                {rarity !== null && <p>{rarity.rarity} - {rarity.rarity_code}</p>}
+                <p><strong>Type:</strong> {card.type}</p>
 
 
-              <p>Level: {card.level}</p>
-              <p>Race: {card.race}</p>
-              <p>Attribute: {card.attribute}</p>
-              {archetype !== null &&
-                <p>Archetype Name: {archetype.archetype_name}</p>
-              }
+                <p><strong>Level:</strong> {card.level}</p>
+                <p><strong>Race:</strong> {card.race}</p>
+                <p><strong>Attribute:</strong> {card.attribute}</p>
+                {archetype !== null &&
+                  <p>Archetype Name: {archetype.archetype_name}</p>
+                }
 
+                <p><strong>Atk:</strong> {card.atk} <strong className="def">Def:</strong> {card.defense}</p>
 
-              <p>Atk: {card.atk}</p>
-              <p>Def: {card.defense}</p>
-              <p>Owned: {cardSetMap.num_owned}</p>
+                <p><strong>Description:</strong> {card.desc}</p>
+              </div>
 
-              <>
+              <div className="num-owned-wrapper">
+                <p><strong>Number Owned:</strong> {numOwned}</p>
+
                 <button className="add-card-owned" onClick={handleAddOwned}>+</button>
                 <button className="remove-card-owned" onClick={handleRemoveOwned}>-</button>
-              </>
+
+                <br />
+
+                <p><strong>Price:</strong> ${cardSetMap.card_price.toFixed(2)}</p>
+                <p><strong>Total:</strong> ${cardSetMap.card_price.toFixed(2) * numOwned}</p>
+              </div>
+
             </div>
           </Card.Body>
-          <Card.Footer>
-            <p><strong>Description:</strong> {card.desc}</p>
-          </Card.Footer>
         </Card>
       }
     </div>
