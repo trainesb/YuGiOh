@@ -37,7 +37,6 @@ const Profile = () => {
             <p>Email: {state.user.email}</p>
             <p>Phone: {state.user.phone}</p>
             <p>Phone Provider: {providers[state.user.phone_provider]}</p>
-            <p className="text-center"><button>Delete Account</button></p>
           </div>
       }
 

@@ -15,42 +15,45 @@
 
     .card-wrapper {
       position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       .card-rarity {
         background: #fff;
         position: absolute;
+        padding: 0.2rem;
+        border-radius: 0.5rem;
         top: 1.5rem;
         right: 1.5rem;
         z-index: 1;
       }
 
       .numOwned {
-        background: #fff;
         position: absolute;
-        padding: 0.2rem;
-        bottom: 0.5rem;
-        right: 1.5rem;
+        font-size: 7rem;
       }
 
       .add-card-owned {
         position: absolute;
-        left: 0;
-        right: 0;
-        top: 5rem;
-        margin: auto;
+        right: 2rem;
+        width: 1.5rem;
+        height: 2rem;
       }
 
       .remove-card-owned {
         position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 5rem;
-        margin: auto;
+        left: 2rem;
+        width: 1.5rem;
+        height: 2rem;
       }
     }
 
     .card-wrapper.opac {
-      opacity: 0.5;
+
+      img {
+        opacity: 0.5;
+      }
     }
 
     .cardCode {

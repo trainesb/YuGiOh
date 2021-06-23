@@ -105,3 +105,64 @@ def get_top_set_for_user(id):
                 if check > 0.25: rtrn.append(s)
 
     return {'status': True, 'top_sets': rtrn}
+
+# Get Total Number of Cards Owned, unique by user id
+@bp.route('/api/user/<int:id>/numCardsOwned', methods=['GET'])
+def get_num_of_cards_by_userID(id):
+    categories = SetCategory.query.all()
+    if not categories: return {'status': False}
+
+    num_cards = 0
+    unique_cards = 0
+
+    dir = os.path.join(os.getcwd(), 'users_card_data', 'user_' + str(id))
+    for category in categories:
+        set = CardSet.query.filter_by(set_category_id=category.id).order_by(CardSet.tcg_date.desc()).all()
+        if set:
+            for s in set:
+                f = open(os.path.join(dir, str(s.id) + '.txt'), 'r')
+                lines = f.readlines()
+                if lines: lines = lines[0].split(',')
+                data = {}
+                for line in lines[:-1]:
+                    line = line.split(':')
+                    num = int(line[1].strip())
+                    num_cards += num
+                    if num > 0: unique_cards += 1
+    return {'num_cards': num_cards, 'num_unique_cards': unique_cards}
+
+# Get all cards owned by user id
+@bp.route('/api/user/<int:id>/allCardsOwned', methods=['GET'])
+def get_all_of_cards_by_userID(id):
+    categories = SetCategory.query.all()
+    if not categories: return {'status': False}
+
+    rtrn = []
+    dir = os.path.join(os.getcwd(), 'users_card_data', 'user_' + str(id))
+    for category in categories:
+        set = CardSet.query.filter_by(set_category_id=category.id).order_by(CardSet.tcg_date.desc()).all()
+        if set:
+            for s in set:
+                s = s._toDict()
+                if s['tcg_date']: s['tcg_date'] = datetime.date.strftime(s['tcg_date'], "%m/%d/%Y")
+
+                f = open(os.path.join(dir, str(s['id']) + '.txt'), 'r')
+                lines = f.readlines()
+                if lines: lines = lines[0].split(',')
+                tmp = []
+                for line in lines[:-1]:
+                    line = line.split(':')
+                    num = int(line[1].strip())
+                    cardMapId = int(line[0].strip())
+                    if num > 0:
+                        map = CardToSetMap.query.filter_by(id=cardMapId).first()
+                        map = map._toDict()
+                        map['num_owned'] = num
+
+                        card = Card.query.filter_by(id=map['card_id']).first()
+                        map['card'] = card._toDict()
+                        tmp.append(map)
+                if tmp:
+                    s['cards_owned'] = tmp
+                    rtrn.append(s)
+    return {'cards': rtrn}

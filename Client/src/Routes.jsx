@@ -10,7 +10,7 @@ import SearchedCard from './components/cards/SearchedCard'
 import SingleCard from './components/cards/SingleCard'
 import Contact from './components/contact/Contact'
 import SetCategories from './components/cards/SetCategories'
-import PublicProfile from './components/users/PublicProfile'
+import PublicProfile from './components/publicUser/PublicProfile'
 
 const Routes = {
   '/': () => <SetCategories />,
