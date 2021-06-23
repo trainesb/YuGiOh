@@ -6,9 +6,11 @@ import Category from './components/cards/Category'
 
 import About from './components/about/About'
 import Profile from './components/user/Profile'
+import SearchedCard from './components/cards/SearchedCard'
 import SingleCard from './components/cards/SingleCard'
 import Contact from './components/contact/Contact'
 import SetCategories from './components/cards/SetCategories'
+import PublicProfile from './components/users/PublicProfile'
 
 const Routes = {
   '/': () => <SetCategories />,
@@ -19,6 +21,8 @@ const Routes = {
   '/about': () => <About />,
   '/category/:id': ({id}) => <Category categoryId={id} />,
   '/card/:id': ({id}) => <SingleCard setMapId={id} />,
-  '/set/:id': ({id}) => <Cards setId={id} />
+  '/searched/card/:id': ({id}) => <SearchedCard cardId={id} />,
+  '/set/:id': ({id}) => <Cards setId={id} />,
+  '/user/:id': ({id}) => <PublicProfile userId={id} />,
 }
 export default Routes

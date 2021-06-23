@@ -12,6 +12,7 @@ import Col from 'react-bootstrap/Col'
 
 import Header from './components/partials/Header'
 import Footer from './components/partials/Footer'
+import TopNav from './components/partials/TopNav'
 import Nav from './components/partials/Nav'
 import Login from './components/user/Login'
 import Register from './components/user/register/Register'
@@ -77,7 +78,10 @@ const App = () => {
   return (
     <AuthContext.Provider value={{state, dispatch}}>
       <Header />
-      <Container fluid>
+      <Container fluid style={{ backgroundColor: '#165A97'}}>
+        {state.isAuthenticated &&
+          <TopNav />
+        }
         {!state.isAuthenticated &&
           <Row>
             <Col sm={12} className="justify-content-around" style={{ backgroundColor: '#165A97', display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '0.5em 0.5em 0.5em 0' }}>
