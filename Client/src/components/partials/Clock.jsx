@@ -12,7 +12,7 @@ const Clock = () => {
 
   return (
     <div className="clock">
-      <h1>Yu-Gi-Oh!</h1>
+      <h1>Yu-Gi-Oh! Archive</h1>
       <h2>{date.getMonth()+1}/{date.getDate()}/{date.getFullYear()} - {date.toLocaleTimeString()}</h2>
     </div>
   )
