@@ -8,6 +8,7 @@ import Contact from './components/contact/Contact'
 import Register from './components/user/register/Register'
 
 const PublicRoutes = {
+  '/': () => <Users />,
   '/users': () => <Users />,
   '/register': () => <Register />,
   '/contact': () => <Contact />,

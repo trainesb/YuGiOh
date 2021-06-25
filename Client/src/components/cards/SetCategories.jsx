@@ -1,56 +1,41 @@
 import React, { useState, useEffect } from 'react'
+
 import Card from 'react-bootstrap/Card'
+import CardInfo from '../publicUser/CardInfo'
+import CardsOwned from '../publicUser/CardsOwned'
+import TopCards from '../publicUser/TopCards'
+import SearchUsersCards from '../publicUser/SearchUsersCards'
 
-import '../../styles/categories.scss'
+import '../../styles/publicProfile.scss'
 
-const SetCategory = () => {
-  const [categories, setCategories] = useState(null)
-  const [total, setTotal] = useState(0.0)
+const SetCategories = () => {
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    fetch('/api/top/categories')
+    fetch('/api/user/' + sessionStorage.getItem('User'))
       .then(response => response.json())
       .then(data => {
-        if(data.status){
-          setCategories(data.top_sets)
-        }
+        setUser(data.user)
       })
 
-      fetch('/api/totalWorth')
-        .then(response => response.json())
-        .then(data => setTotal(data.total))
   }, [])
 
   return (
-    <div className="categories-wrapper">
-      <Card>
-        <Card.Header>
-          <Card.Title>Total Worth: ${total.toFixed(2)}</Card.Title>
-        </Card.Header>
-      </Card>
-
-      {categories !== null &&
-        <Card>
-          <Card.Header className="text-center"><Card.Title>Almost Completed Sets</Card.Title></Card.Header>
-          <Card.Body className="category-wrapper">
-            {categories.map((set) => (
-              <a href={"/set/" + set.id}>
-              <Card className="category">
-                <Card.Header>{set.set_name}</Card.Header>
-                <Card.Body>
-                  <p>{set.num_owned} / {set.num_of_cards}</p>
-                </Card.Body>
-                <Card.Footer>
-                  <p className="set-date">{set.tcg_date}</p>
-                  <p className="set-code">({set.set_code})</p>
-                </Card.Footer>
-              </Card>
-              </a>
-            ))}
-          </Card.Body>
-        </Card>
-      }
-    </div>
+    <Card className="public-profile-wrapper">
+      <Card.Header>
+        <Card.Title className="text-center">{user && <strong>{user.username}</strong>}`s Card Archive!</Card.Title>
+      </Card.Header>
+      <Card.Body>
+        {user !== null &&
+          <>
+            <CardInfo userId={user.id} />
+            <SearchUsersCards userId={user.id} />
+            <TopCards userId={user.id} />
+            <CardsOwned userId={user.id} />
+          </>
+        }
+      </Card.Body>
+    </Card>
   )
 }
-export default SetCategory
+export default SetCategories

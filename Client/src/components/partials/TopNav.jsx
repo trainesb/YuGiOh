@@ -12,7 +12,7 @@ const TopNav = () => {
     <Accordion className="top-nav-wrapper">
       <Card className="top-nav-link">
         <Accordion.Toggle as={Card.Header} className="p-0" variant="link" eventKey={'home'}>
-          <a className="btn-nav" href="/">Home</a>
+          <a className="btn-nav" href={"/"}>Home</a>
         </Accordion.Toggle>
       </Card>
 

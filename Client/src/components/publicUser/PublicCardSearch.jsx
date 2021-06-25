@@ -14,7 +14,6 @@ const PublicCardSearch = (props) => {
     fetch('/api/searched/card/' + cardId + '/user/' + userId)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         if(data.status) {
           setCard(data.card)
           setSets(data.maps)
