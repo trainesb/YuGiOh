@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import Accordion from 'react-bootstrap/Accordion'
 import Card from 'react-bootstrap/Card'
-
+import searchIcon from '../../../public/images/icons/search.png'
 
 const Search = () => {
   const outer = useRef()
@@ -49,8 +49,9 @@ const Search = () => {
   return (
     <div className="search" ref={outer}>
       <Card className="top-nav-link">
-        <Accordion.Toggle as={Card.Header} className="p-0" variant="link" eventKey={'logout'}>
+        <Accordion.Toggle as={Card.Header} className="search-wrapper" variant="link" eventKey={'logout'}>
           <input type="text" value={srch} onChange={handleChange}/>
+          <img className="search-icon" src={searchIcon} />
         </Accordion.Toggle>
       </Card>
 

@@ -55,10 +55,11 @@ def get_phone_email_username():
     return {'rtrn': rtrn}
 
 # Get user by username
-@bp.route('/api/user/<string:username>', methods=['GET'])
+@bp.route('/api/username/<string:username>', methods=['GET'])
 def get_username(username):
     user = User.query.filter_by(username=username).first()
-    return user._toDict()
+    if user: return {'status': True, 'user': user._toDict()}
+    return {'status': False, 'user': None}
 
 # Get all users
 @bp.route('/api/users', methods=['GET'])

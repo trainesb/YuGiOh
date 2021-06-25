@@ -19,7 +19,7 @@ const Users = () => {
       {loading
         ? <Loading />
         : users.map((user) => (
-          <a href={'/user/' + user.id}>
+          <a href={'/user/' + user.username}>
             <Card>
               <Card.Body>
                 <h2>{user.username}</h2>

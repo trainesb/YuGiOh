@@ -29,6 +29,10 @@
   .search {
     position: relative;
 
+    .search-wrapper {
+      padding: 0 0.5rem;
+    }
+
     .found-wrapper {
       position: absolute;
       background-color: #fff;

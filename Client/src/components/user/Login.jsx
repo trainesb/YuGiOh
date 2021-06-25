@@ -37,6 +37,7 @@ export const Login = () => {
           console.log(dt.user)
           sessionStorage.setItem('User', dt.user.id)
           dispatch({type: "LOGIN", payload: dt})
+          window.location.assign('/')
         } else {
           setData({...data, isSubmitting: false, errorMessage: dt.error})
           alert('Login Failed: ' + dt.error)

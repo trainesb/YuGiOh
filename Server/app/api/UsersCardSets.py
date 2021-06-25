@@ -166,3 +166,61 @@ def get_all_of_cards_by_userID(id):
                     s['cards_owned'] = tmp
                     rtrn.append(s)
     return {'cards': rtrn}
+
+# Get 10 Most Expinsive Cards
+@bp.route('/api/user/<int:id>/topCardsOwned', methods=['GET'])
+def get_top_of_cards_by_userID(id):
+    categories = SetCategory.query.all()
+    if not categories: return {'status': False}
+
+    rtrn = []
+    dir = os.path.join(os.getcwd(), 'users_card_data', 'user_' + str(id))
+    for category in categories:
+        set = CardSet.query.filter_by(set_category_id=category.id).order_by(CardSet.tcg_date.desc()).all()
+        if set:
+            for s in set:
+                s = s._toDict()
+                if s['tcg_date']: s['tcg_date'] = datetime.date.strftime(s['tcg_date'], "%m/%d/%Y")
+
+                f = open(os.path.join(dir, str(s['id']) + '.txt'), 'r')
+                lines = f.readlines()
+                if lines: lines = lines[0].split(',')
+
+                for line in lines[:-1]:
+                    line = line.split(':')
+                    num = int(line[1].strip())
+                    cardMapId = int(line[0].strip())
+                    if num > 0:
+                        print('Card Owned')
+                        map = CardToSetMap.query.filter_by(id=cardMapId).first()
+                        map = map._toDict()
+                        map['num_owned'] = num
+                        map['set'] = s
+
+                        card = Card.query.filter_by(id=map['card_id']).first()
+                        print('Card: ', card.name)
+                        map['card'] = card._toDict()
+                        if rtrn:
+                            print('rtrn not empty')
+                            bool = False
+                            tmp = []
+                            for r in rtrn:
+                                print('tmp len: ', len(tmp))
+                                if len(tmp) > 9: break
+                                print('new card price: ', map['card_price'])
+                                print('old card price: ', r['card_price'])
+                                if map['card_price'] > r['card_price'] and not bool:
+                                    bool = True
+                                    print('Card: ', card.name, ' added')
+                                    tmp.append(map)
+                                    tmp.append(r)
+                                else: tmp.append(r)
+                            if not bool and len(tmp) < 10:
+                                print('Card: ', card.name, ' added')
+                                tmp.append(map)
+                            rtrn = tmp
+                        else:
+                            print('rtrn empty')
+                            rtrn.append(map)
+
+    return {'cards': rtrn}
