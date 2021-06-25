@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
+import Search from './components/partials/Search'
 import Header from './components/partials/Header'
 import Footer from './components/partials/Footer'
 import TopNav from './components/partials/TopNav'
@@ -52,6 +53,7 @@ const reducer = (state, action) => {
 const App = () => {
   const routeResult = useRoutes(Routes)
   const publicRoute = useRoutes(PublicRoutes)
+  const mql = window.matchMedia('(max-width: 600px)')
 
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
@@ -80,8 +82,9 @@ const App = () => {
     <AuthContext.Provider value={{state, dispatch}}>
       <Header />
       <Container fluid style={{ backgroundColor: '#165A97'}}>
-        {state.isAuthenticated &&
-          <TopNav />
+        {state.isAuthenticated && !mql.matches
+           ? <TopNav />
+           : <Search />
         }
         {!state.isAuthenticated &&
           <>
@@ -100,12 +103,27 @@ const App = () => {
         {state.isAuthenticated &&
           <Row>
             <ProfileIcon />
-            <Col sm={2} className='p-2 m-0' style={{ backgroundColor: '#165A97', marginTop: '2rem', alignItems: 'center' }}>
-              <Nav />
-            </Col>
-            <Col sm={10} className="justify-content-around" style={{ backgroundColor: '#165A97', display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '0.5em 0.5em 0.5em 0' }}>
-              {routeResult}
-            </Col>
+
+            {mql.matches
+              ? <>
+                  <Col sm={12} className='p-2 m-0' style={{ backgroundColor: '#165A97', marginTop: '2rem', alignItems: 'center' }}>
+                    <Nav />
+                  </Col>
+                  <Col sm={12} className="justify-content-around" style={{ backgroundColor: '#165A97', display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '0.5em 0.5em 0.5em 0' }}>
+                    {routeResult}
+                  </Col>
+                </>
+              : <>
+                  <Col sm={2} className='p-2 m-0' style={{ backgroundColor: '#165A97', marginTop: '2rem', alignItems: 'center' }}>
+                    <Nav />
+                  </Col>
+                  <Col sm={10} className="justify-content-around" style={{ backgroundColor: '#165A97', display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '0.5em 0.5em 0.5em 0' }}>
+                    {routeResult}
+                  </Col>
+                </>
+
+            }
+
           </Row>
         }
       </Container>

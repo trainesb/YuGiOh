@@ -34,12 +34,6 @@ const PublicTopNav = () => {
         </Accordion.Toggle>
       </Card>
 
-      <Card className="top-nav-link">
-        <Accordion.Toggle as={Card.Header} className="p-0" variant="link" eventKey={'contact'}>
-          <a className="btn-nav" href="/contact">Contact</a>
-        </Accordion.Toggle>
-      </Card>
-
     </Accordion>
   )
 }

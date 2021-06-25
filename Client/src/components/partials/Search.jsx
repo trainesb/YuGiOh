@@ -46,6 +46,7 @@ const Search = () => {
       })
   }
 
+
   return (
     <div className="search" ref={outer}>
       <Card className="top-nav-link">
@@ -66,5 +67,6 @@ const Search = () => {
       }
     </div>
   )
+
 }
 export default Search

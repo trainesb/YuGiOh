@@ -28,8 +28,10 @@ const SetCategories = () => {
       <Card.Body>
         {user !== null &&
           <>
-            <CardInfo userId={user.id} />
-            <SearchUsersCards userId={user.id} />
+            <div className="card-info-search-wrapper">
+              <CardInfo userId={user.id} />
+              <SearchUsersCards userId={user.id} />
+            </div>
             <TopCards userId={user.id} />
             <CardsOwned userId={user.id} />
           </>

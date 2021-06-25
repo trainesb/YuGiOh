@@ -30,6 +30,11 @@
 .search {
   position: relative;
 
+  @media only screen and (max-width: 600px) {
+    display: flex;
+    justify-content: center;
+  }
+
   .search-wrapper {
     padding: 0 0.5rem;
   }
@@ -38,6 +43,10 @@
     position: absolute;
     background-color: #fff;
     z-index: 2;
+
+    @media only screen and (max-width: 600px) {
+      top: 3rem;
+    }
 
     .found-link {
       border: solid thin #000;

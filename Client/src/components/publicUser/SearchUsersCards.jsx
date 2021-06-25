@@ -62,7 +62,7 @@ const SearchUsersCards = (props) => {
       <Card className="top-nav-link">
         <Card.Title className="text-center"><strong>Search User's Cards</strong></Card.Title>
         <Accordion.Toggle as={Card.Header} className="search-wrapper" variant="link" eventKey={'logout'}>
-          <input type="text" value={srch} onChange={handleChange}/>
+          <input className="search-input" type="text" value={srch} onChange={handleChange}/>
           <img className="search-icon" src={searchIcon} />
         </Accordion.Toggle>
       </Card>

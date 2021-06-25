@@ -15,12 +15,12 @@ const Users = () => {
   }, [])
 
   return(
-    <div style={{backgroundColor: '#C5D7E8', width: '100%', height: '100%', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}>
+    <div style={{backgroundColor: '#C5D7E8', width: '100%', height: '100%', display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', flexWrap: 'wrap'}}>
       {loading
         ? <Loading />
         : users.map((user) => (
           <a href={'/user/' + user.username}>
-            <Card>
+            <Card style={{border: 'solid thin #000', borderRadius: '0.5rem', margin: '0.5rem'}}>
               <Card.Body>
                 <h2>{user.username}</h2>
               </Card.Body>

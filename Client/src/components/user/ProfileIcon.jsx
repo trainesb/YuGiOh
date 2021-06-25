@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
 
 import userIcon from '../../../public/images/icons/user.png'
+import menuIcon from '../../../public/images/icons/menu.png'
 import '../../styles/profileIcon.scss'
 
 const ProfileIcon = () => {
   const ref = useRef()
   const [show, setShow] = useState(false)
+  const mql = window.matchMedia('(max-width: 600px)')
 
   useEffect(() => {
     document.addEventListener("mouseover", handleClick)
@@ -37,22 +39,59 @@ const ProfileIcon = () => {
   }
 
 
-  return (
-    <div className="profile-icon-wrapper" ref={ref}>
-      <a href='/profile'><img className="profile-icon" src={userIcon} /></a>
+  if(mql.matches) {
+    return(
+      <div className="menu-icon-wrapper" ref={ref}>
+        <img className="menu-icon" src={menuIcon} />
 
-      {show &&
-        <div className="profile-menu">
-          <div className="profile-menu-link">
-            <a href='/profile'>Profile</a>
-          </div>
+        {show &&
+          <div className="menu">
 
-          <div className="profile-menu-link">
-            <a onClick={handleLogout}>Logout</a>
+            <div className="menu-link">
+              <a href='/'>Home</a>
+            </div>
+
+            <div className="menu-link">
+              <a href='/users'>Users</a>
+            </div>
+
+            <div className="menu-link">
+              <a href='/about'>About</a>
+            </div>
+
+            <div className="menu-link">
+              <a href='/contact'>Contact</a>
+            </div>
+
+            <div className="menu-link">
+              <a href='/profile'>Profile</a>
+            </div>
+
+            <div className="menu-link">
+              <a onClick={handleLogout}>Logout</a>
+            </div>
           </div>
-        </div>
-      }
-    </div>
-  )
+        }
+      </div>
+    )
+  } else {
+    return (
+      <div className="profile-icon-wrapper" ref={ref}>
+        <a href='/profile'><img className="profile-icon" src={userIcon} /></a>
+
+        {show &&
+          <div className="profile-menu">
+            <div className="profile-menu-link">
+              <a href='/profile'>Profile</a>
+            </div>
+
+            <div className="profile-menu-link">
+              <a onClick={handleLogout}>Logout</a>
+            </div>
+          </div>
+        }
+      </div>
+    )
+  }
 }
 export default ProfileIcon
