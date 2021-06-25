@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRoutes } from 'hookrouter'
 import Routes from './Routes'
+import PublicRoutes from './PublicRoutes'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -9,6 +10,7 @@ import Col from 'react-bootstrap/Col'
 import Header from './components/partials/Header'
 import Footer from './components/partials/Footer'
 import TopNav from './components/partials/TopNav'
+import PublicTopNav from './components/partials/PublicTopNav'
 import Nav from './components/partials/Nav'
 import Login from './components/user/Login'
 import ProfileIcon from './components/user/ProfileIcon'
@@ -17,7 +19,7 @@ import Register from './components/user/register/Register'
 export const AuthContext = React.createContext()
 const initialState = {
   isAuthenticated: false,
-  page: 'login',
+  page: '',
   user: null,
 }
 
@@ -49,6 +51,8 @@ const reducer = (state, action) => {
 
 const App = () => {
   const routeResult = useRoutes(Routes)
+  const publicRoute = useRoutes(PublicRoutes)
+
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   useEffect(() => {
@@ -80,11 +84,18 @@ const App = () => {
           <TopNav />
         }
         {!state.isAuthenticated &&
-          <Row>
-            <Col sm={12} className="justify-content-around" style={{ backgroundColor: '#165A97', display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '0.5em 0.5em 0.5em 0' }}>
-              {state.page === 'login' ? <Login /> : <Register />}
-            </Col>
-          </Row>
+          <>
+            <PublicTopNav />
+            <Row>
+              <Col sm={12} className="justify-content-around" style={{ backgroundColor: '#165A97', display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '0.5em 0.5em 0.5em 0' }}>
+                {state.page === 'login'
+                  ? <Login />
+                  : state.page === 'register' ? <Register />
+                  : publicRoute
+               }
+              </Col>
+            </Row>
+          </>
         }
         {state.isAuthenticated &&
           <Row>

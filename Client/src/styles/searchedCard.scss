@@ -36,7 +36,7 @@
           margin: 0.25rem;
           padding: 0.25rem;
 
-          a {
+          a, p {
             text-decoration: none;
             color: #000;
             border: solid thin #000;
@@ -44,7 +44,7 @@
             border-radius: 0.5rem;
           }
 
-          a:hover {
+          a:hover, p:hover {
             background-color: lightgrey;
             cursor: pointer;
           }
