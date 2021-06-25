@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card'
 import CardInfo from './CardInfo'
 import CardsOwned from './CardsOwned'
 import TopCards from './TopCards'
+import SearchUsersCards from './SearchUsersCards'
 
 import '../../styles/publicProfile.scss'
 
@@ -30,6 +31,7 @@ const PublicProfile = (props) => {
         {user !== null &&
           <>
             <CardInfo userId={user.id} />
+            <SearchUsersCards userId={user.id} />
             <TopCards userId={user.id} />
             <CardsOwned userId={user.id} />
           </>
