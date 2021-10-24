@@ -11,6 +11,7 @@ module.exports = {
     filename: "bundle.js",
     publicPath: '/'
   },
+  node : { fs: 'empty' },
   resolve: {
     alias: {
       "react-dom": "@hot-loader/react-dom"
@@ -29,9 +30,11 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"]
       },{
         test: /\.(png|jpe?g|gif)$/,
-        loader: 'url-loader?limit=9000000&name=images/*/[name].[ext]',
+        use: {
+          loader: 'url-loader?limit=9000000&name=images/*/[name].[ext]',
+        }
       }
-    ]
+    ],
   },
   optimization: {
     splitChunks: { chunks: 'all' }

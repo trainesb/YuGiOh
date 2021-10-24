@@ -1,0 +1,34 @@
+.set-cards-wrapper {
+
+  .sets-wrapper {
+    list-style: none;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .set {
+      width: 15rem;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+
+
+      .title {
+        padding: 0.5rem 0;
+      }
+
+      .card-image {
+        position: relative;
+
+        .rarity-code {
+          position: absolute;
+          background-color: #fff;
+          border-radius: 1rem;
+          right: 3rem;
+          top: 2rem;
+          padding: 0.5rem;
+        }
+      }
+    }
+  }
+}

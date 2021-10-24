@@ -1,0 +1,22 @@
+.category-wrapper {
+
+  .card-wrapper {
+    list-style: none;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .set {
+      border: solid thin #000;
+      width: 15rem;
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+
+      a {
+        text-decoration: none;
+        color: #000;
+      }
+    }
+  }
+}

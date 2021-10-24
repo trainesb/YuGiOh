@@ -3,14 +3,11 @@
 */migrations/
 */__pycache__/
 
-*/venv/
+venv
 */app.db
 */dist
-*/videos
 */node_modules
 */__pycache/
 */package-lock.json
-*/images
-*/users_card_data/
-
+*/public/images
 Script/Logs/

@@ -8,21 +8,18 @@
     "@testing-library/user-event": "^12.8.3",
     "autoprefixer": "^10.2.5",
     "bootstrap": "^4.6.0",
-    "chart.js": "^2.9.4",
-    "hookrouter": "^1.2.5",
-    "jquery": "^3.6.0",
     "popper.js": "^1.16.1",
     "precss": "^3.1.2",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",
     "react-dom": "^17.0.2",
+    "react-hook-recaptcha": "^1.0.3",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "^4.0.3",
-    "url-loader": "^3.0.0",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "dev": "webpack --mode development",
-    "start": "webpack serve --open --hot --mode development",
+    "dev": "webpack serve --open --hot --mode development",
     "build": "webpack --mode production",
     "react_build": "react-scripts build",
     "test": "react-scripts test",
@@ -46,6 +43,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "./yugioh",
   "devDependencies": {
     "@babel/core": "^7.14.2",
     "@babel/preset-env": "^7.14.2",
@@ -55,18 +53,18 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "beautiful-react-hooks": "^0.31.1",
     "css-loader": "^5.2.4",
+    "file-loader": "^6.2.0",
     "google-maps-react": "^2.0.6",
     "html-webpack-plugin": "^4.5.2",
     "node-sass": "^5.0.0",
     "postcss": "^8.2.15",
     "postcss-loader": "^4.2.0",
-    "react-chartjs-2": "^2.11.2",
     "react-hot-loader": "^4.13.0",
     "sass": "^1.32.13",
     "sass-loader": "^10.2.0",
     "style-loader": "^2.0.0",
+    "url-loader": "^3.0.0",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2"
-  },
-  "proxy": "http://localhost:5000"
+  }
 }
