@@ -2,4 +2,4 @@ from flask import Blueprint
 
 bp = Blueprint('api', __name__)
 
-from app.api import CardSets, User, UsersCardSets, Cards, Contact
+from app.api import User, Cards, CardSets, Categories, CardInfo

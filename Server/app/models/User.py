@@ -21,10 +21,10 @@ class User(UserMixin, db.Model):
     two_factor = db.Column(db.String(4))
     two_factor_timestamp = db.Column(db.DateTime)
 
-    card_folder = db.Column(db.String(120), unique=True)
+    users_cards = db.relationship('UsersCard', backref='user', lazy=True)
 
     def __repr__(self):
-        return '<User ID:{} Username:{} Email:{} Phone:{} Phone Provider:{} Invited:{} Created:{} Last Updated:{} Last Active:{} Card Folder:{}>'.format(self.id, self.username, self.email, self.phone, self.phone_provider, self.invited, self.created, self.last_updated, self.last_active, self.card_folder)
+        return '<User ID:{} Username:{} Email:{} Phone:{} Phone Provider:{} Invited:{} Created:{} Last Updated:{} Last Active:{}>'.format(self.id, self.username, self.email, self.phone, self.phone_provider, self.invited, self.created, self.last_updated, self.last_active)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -59,8 +59,7 @@ class User(UserMixin, db.Model):
             'created': self.created,
             'last_updated': self.last_updated,
             'last_active': self.last_active,
-            'invited': self.invited,
-            'card_folder': self.card_folder
+            'invited': self.invited
         }
 
 @login.user_loader

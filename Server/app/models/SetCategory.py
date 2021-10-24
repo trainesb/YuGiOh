@@ -5,6 +5,7 @@ class SetCategory(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(200), unique=True)
+    card_sets = db.relationship('CardSet', backref='set_category')
 
     def __init__(self, category_name):
         self.category_name = category_name

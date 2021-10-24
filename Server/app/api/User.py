@@ -11,7 +11,7 @@ from app.models.CardSet import CardSet
 from app.utils.email import send_email
 from flask import request, current_app
 from datetime import datetime, timedelta
-from app.models.CardToSetMap import CardToSetMap
+from app.models.UsersCard import UsersCard
 from flask_login import current_user, login_user, logout_user, login_required
 
 # Get all users
@@ -62,7 +62,7 @@ def get_username(username):
     return {'status': False, 'user': None}
 
 # Get all users
-@bp.route('/api/users', methods=['GET'])
+@bp.route('/api/api/users', methods=['GET'])
 def get_time():
     users = User.query.all()
     rtrn = {'users': []}
@@ -71,27 +71,43 @@ def get_time():
             rtrn['users'].append(user._toDict())
     return rtrn
 
-# Create a new user
-@bp.route('/api/user', methods=['POST'])
-def create_user():
-    try:
-        data = request.get_json()
-        user = User.query.filter_by(username=data.get('username')).first()
-        if user: return {'status': False, 'error': 'Username, `' + data.get('username') + '` has already been used!'}
-        user = User()
-        user.username = data.get('username')
-        user.set_password(data.get('password'))
-        user.email = data.get('email')
-        user.phone = data.get('phone')
-        user.phone_provider = data.get('phone_provider')
-        user.invited = datetime.now()
-        user.invited_code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
-        db.session.add(user)
-        db.session.commit()
-        return {'status': True}
-    except Exception as err:
-        print('Create User Error: ', err)
-        return {'status': False, 'error': err}
+# User Registration
+@bp.route('/api/register', methods=['POST'])
+def user_registration():
+    data = request.get_json()
+
+    if User.query.filter_by(username=data.get('username')).first() is not None:
+        return {'status': False, 'error': 'User, ' + data.get('username') + ' already exists!'}
+    if User.query.filter_by(email=data.get('email')).first() is not None:
+        return {'status': False, 'error': 'Email, ' + data.get('email') + ' already used by another account!'}
+    if User.query.filter_by(phone=data.get('phone')).first() is not None:
+        return {'status': False, 'error': 'Phone, ' + data.get('phone') + ' already used by another account!'}
+    user = User()
+    user.username = data.get('username')
+    user.set_password(data.get('password'))
+    user.email = data.get('email')
+    user.phone = data.get('phone')
+    user.phone_provider = data.get('phoneProvider')
+    user.role = 'U'
+    user.invited = datetime.now()
+    user.two_factor = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    db.session.add(user)
+    db.session.commit()
+
+    subject = "ConsultNet Group LLC Confirmation"
+    body = None
+    url = 'https://consultnetgroup.com/validate/' + user.username + '/' + user.two_factor
+    link = 'https://consultnetgroup.com/validate/' + user.username
+    html = """\
+    <html>
+        <head><h2>ConsultNet Group Account Confirmatrion</h2></head>
+        <body>
+            <p>Please confirm your account by clicking this <a href={url}>link</a> or enter the code: <strong>{code}</strong> at <a href={link}>consultnetgroup.com/validate/{username}</a></p>
+        </body>
+    </html>
+    """.format(url=url, code=user.two_factor, link=link, username=user.username)
+    send_email(subject, [user.email], body, html)
+    return {'status': True}
 
 # Send verification code to user
 @bp.route('/api/register/verification/<string:method>/<string:username>', methods=['GET'])
@@ -108,30 +124,16 @@ def send_verification_code(method, username):
 
     return {'status': True}
 
-# Check registration verification code
-@bp.route('/api/register/code/<string:code>/<string:username>', methods=['GET'])
-def check_verification_code(code, username):
+# Validate User
+@bp.route('/api/validate', methods=['POST'])
+def validate_user():
+    data = request.get_json()
+    username = data.get('username')
+    code = data.get('code')
     user = User.query.filter_by(username=username).first()
-    if user is None: return {'status': False, 'error': 'User does not exist!'}
-    if user.invited_code != code: return {'status': False, 'error': 'Incorrect Verification Code: ' + code}
-
-    # Create folder for user
-    dir = 'user_' + str(user.id)
-    os.mkdir(os.path.join(os.getcwd(), 'users_card_data', dir))
-    user.card_folder = dir
-
-    # Cetae and init file for user card data
-    card_sets = CardSet.query.all()
-    for card_set in card_sets:
-        file_name = os.path.join(os.getcwd(), 'users_card_data', dir, str(card_set.id) + ".txt")
-        f = open(file_name, 'w')
-
-        # Add card data to file for set
-        cards = CardToSetMap.query.filter_by(card_set_id=card_set.id).all()
-        for card in cards:
-            f.write(str(card.id) + ':' + str(0) + ',')
-        f.close()
-
+    if user is None: return {'status': False, 'error': 'User, ' + username + ' does not exist!'}
+    if user.two_factor != code: return {'status': False, 'error': 'Code is not correct!'}
+    if user.invited + timedelta(days = 2) < datetime.now(): return {'status': False, 'error': 'Confirmation has expired!'}
     user.created = datetime.now()
     db.session.add(user)
     db.session.commit()
@@ -142,18 +144,12 @@ def check_verification_code(code, username):
 @login_required
 def delete_user(id):
     user = User.query.filter_by(id=id).first()
-
-    print("Delete Users Card Data")
-    dir = 'user_' + str(user.id)
-    folder = os.path.join(os.getcwd(), 'users_card_data', dir)
-    shutil.rmtree(folder)
     db.session.delete(user)
-
     db.session.commit()
     return {'status': True}
 
 # Check if a user is logged in
-@bp.route('/api/user/loggedin', methods=['GET'])
+@bp.route('/api/loggedin', methods=['GET'])
 def check_user_loggedin():
     try:
         user = current_user.username
@@ -164,7 +160,7 @@ def check_user_loggedin():
         return {'status': False}
 
 # User login
-@bp.route('/api/user/login', methods=['POST'])
+@bp.route('/api/login', methods=['POST'])
 def user_login():
     data = request.get_json()
     user = User.query.filter_by(username=data.get('username')).first()
@@ -178,22 +174,31 @@ def user_login():
     return {'status': True, 'user': user._toDict()}
 
 # User Logout
-@bp.route('/api/user/logout', methods=['GET'])
+@bp.route('/api/logout', methods=['GET'])
 @login_required
 def user_logout():
     logout_user()
     return {'status': True}
 
-# Update a user by id
-@bp.route('/api/user/<int:id>', methods=['PUT'])
+# Update User
+@bp.route('/api/user', methods=['PUT'])
 @login_required
-def edit_user(id):
+def update_user():
     data = request.get_json()
-    user = User.query.filter_by(id=id).first()
+
+    user = User.query.filter_by(id=data.get('id')).first()
+    if user.username != data.get('username') and User.query.filter_by(username=data.get('username')).first() is not None:
+        return {'status': False, 'error': 'User, ' + data.get('username') + ' already exists!'}
+    if user.email != data.get('email') and User.query.filter_by(email=data.get('email')).first() is not None:
+        return {'status': False, 'error': 'Email, ' + data.get('email') + ' already used by another account!'}
+    if user.phone != data.get('phone') and User.query.filter_by(phone=data.get('phone')).first() is not None:
+        return {'status': False, 'error': 'Phone, ' + data.get('phone') + ' already used by another account!'}
+
     user.username = data.get('username')
     user.email = data.get('email')
     user.phone = data.get('phone')
-    user.phone_provider = data.get('phone_provider')
+    user.phone_provider = data.get('phoneProvider')
+    user.last_updated = datetime.now()
     db.session.add(user)
     db.session.commit()
     return {'status': True}
